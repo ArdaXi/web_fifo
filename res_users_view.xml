@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+	<data>
+		<record id="web_fifo_res_users_account" model="ir.ui.view">
+			<field name="name">web.fifo.res.users.account_tab</field>
+			<field name="model">res.users</field>
+			<field name="inherit_id" ref="base.view_users_form"/>
+			<field name="arch" type="xml">
+				<notebook>
+					<page string="Project FiFo" position="inside">
+                        <group name="standard_params" string="Standard parameters">
+                            <field name="fifo_username"/>
+                            <field name="fifo_password" password="True"/>
+                            <field name="fifo_server_id"/>
+                        </group>
+					</page>
+				</notebook>
+			</field>
+		</record>
+	</data>
+</openerp>
