@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+        <record id="action_fifo_machines" model="ir.actions.client">
+            <field name="tag">web_fifo.machines</field>
+        </record>
+		<menuitem name="FiFo" id="menu_fifo" action="action_fifo_machines"/>
+		<menuitem id="menu_fifo_fifo" name="FiFo" parent="menu_fifo"/>
+        <menuitem id="menu_fifo_machines" name="Machines" parent="menu_fifo_fifo" action="action_fifo_machines"/>
+		<menuitem id="menu_fifo_datasets" name="Datasets" parent="menu_fifo_fifo"/>
+		<menuitem id="menu_fifo_servers" name="Servers" parent="menu_fifo_fifo"/>
+		<menuitem id="menu_fifo_config" name="Configuration" parent="menu_fifo" sequence="100"/>
+	</data>
+</openerp>
