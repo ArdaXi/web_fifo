@@ -7,6 +7,8 @@ openerp.web_fifo = function(instance) {
     
     instance.web_fifo.machines = instance.web.Widget.extend({
         start: function() {
+            var Users = new Model('res.users');
+            Users.call('get_fifo_token').then(function (result) { console.log(result); });
             this.$el.text("Hello, world!");
             return this._super();
         },

@@ -67,6 +67,10 @@ class res_users(orm.Model):
 		'fifo_token': fields.char('FiFo token', size=50, help="The last token used for this user."),
 		'fifo_server_id': fields.many2one('web.fifo.server', 'FiFo server', help="FiFo server that this user is on. If blank, the first in the company is used."),
 	}
+    
+    def get_fifo_token(self, cr, uid, context=None):
+        wiggle = _connect_to_fifo(cr, uid, context)
+        return wiggle.get_token()
 
 class res_company(orm.Model):
 	_inherit = "res.company"

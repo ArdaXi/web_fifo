@@ -3,7 +3,7 @@
     'version' : "1.0",
     'author' : "Arda Xi",
     'category' : "Tools",
-    'depends' : ['web'],
+    'depends' : [],
     'external_dependencies': {'python': ['fifo']},
     'data' : [
         'web_fifo_view.xml',
