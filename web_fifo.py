@@ -1,6 +1,6 @@
 from openerp.osv import fields, orm
 
-from fifo.api.wiggle import Wiggle
+import fifo
 
 class web_fifo_server(orm.Model):
     '''FiFo server object, to store Wiggle access information'''
@@ -46,7 +46,7 @@ class web_fifo_server(orm.Model):
             raise orm.except_orm('Error:', 'No FiFo details specified for the current user.')
 
         try:
-            wiggle = Wiggle()
+            wiggle = fifo.Wiggle()
             wiggle.init(fifo_server.host, user.fifo_username, user.fifo_password, user.fifo_token)
             if wiggle.get_token():
                 user.write({'fifo_token': wiggle.get_token()}, context=context)
@@ -66,9 +66,31 @@ class res_users(orm.Model):
         'fifo_server_id': fields.many2one('web.fifo.server', 'FiFo server', help="FiFo server that this user is on. If blank, the first in the company is used."),
     }
     
-    def get_fifo_token(self, cr, uid, context=None):
-        wiggle = self.pool['web.fifo.server']._connect_to_fifo(cr, uid, context)
-        return wiggle.get_token()
+    def _get_wiggle(self, cr, uid, context=None):
+        return self.pool['web.fifo.server']._connect_to_fifo(cr, uid, context)
+        
+    def _get_fifo_module(self, cr, uid, name, context=None):
+        try: 
+            module = getattr(fifo, name)
+        except AttributeError, e:
+            raise orm.except_orm('Error:', "Module '%s' not found in FiFo API" % name)
+            return False
+        return module(self._get_wiggle(cr, uid, context=context))
+    
+    def call_fifo(self, cr, uid, module_name, method_name, args=None, context=None):
+        if(module_name == "Wiggle"):
+            module = self._get_wiggle(cr, uid, context=context)
+        else:
+            module = self._get_fifo_module(cr, uid, module_name, context=context)
+        try:
+            method = getattr(module, method_name)
+        except AttributeError, e:
+            raise orm.except_orm('Error:', "Method '%s' not found in module %s" % (method_name, module_name))
+            return False
+        if args:
+            return method(args)
+        else:
+            return method()
 
 class res_company(orm.Model):
     _inherit = "res.company"
